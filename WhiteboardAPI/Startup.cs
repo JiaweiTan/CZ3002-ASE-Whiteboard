@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -42,6 +43,13 @@ namespace WhiteboardAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Whiteboard API", Version = "v1" });
+            });
+
+            //add cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:8080"));
             });
 
             // configure strongly typed settings objects
@@ -80,6 +88,7 @@ namespace WhiteboardAPI
             services.AddScoped<IContentRepository, ContentRepository>();
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<IDiscussionBoardRepository, DiscussionBoardRepository>();
+            services.AddScoped<IChatRepository, ChatRepository>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddScoped<IUrlHelper, UrlHelper>(implementationFactory =>
@@ -108,6 +117,7 @@ namespace WhiteboardAPI
             // using WebPWrecover.Services;
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.AddHttpContextAccessor();
 
         }
 
@@ -135,6 +145,12 @@ namespace WhiteboardAPI
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithExposedHeaders("content-encoding", "content-length", "content-type", "date", "server", "x-pagination"));
 
             app.UseEndpoints(endpoints =>
             {

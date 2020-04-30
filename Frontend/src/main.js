@@ -18,6 +18,8 @@ import "vuetify/dist/vuetify.min.css";
 import "@mdi/font/css/materialdesignicons.css";
 import "material-design-icons-iconfont/dist/material-design-icons.css";
 import "viewerjs/dist/viewer.css";
+import 'video.js/dist/video-js.css'
+// import 'vue-video-player/src/custom-theme.css'
 import axios from "axios";
 import VueAxios from "vue-axios";
 import moment from "moment";
@@ -25,6 +27,8 @@ import CKEditor from "@ckeditor/ckeditor5-vue";
 import Viewer from "v-viewer";
 import VueCookies from 'vue-cookies'
 import VueParticles from 'vue-particles'
+import VueVideoPlayer from 'vue-video-player'
+import VueTreeList from 'vue-tree-list'
 
 // Sync store with router
 sync(store, router);
@@ -41,6 +45,11 @@ Vue.use(Vuetify, {
   iconfont: "mdi",
   theme
 });
+Vue.use(VueVideoPlayer, /* {
+  options: global default options,
+  events: global videojs events
+} */)
+Vue.use(VueTreeList)
 
 // Disable annoying production mode warning 
 // ("You are running Vue in devmode") in Console
